@@ -1,13 +1,13 @@
 // const express = require('express');
 // const cors = require('cors');
-import axios from ('axios');
-import moment from ('moment');
+const axios = require('axios');
+const moment = require('moment');
 // 拿取env檔資料的套件
 // const dotenv = require('dotenv');
 // dotenv.config();
 
 // 引入google api套件
-import { google } from 'googleapis';
+const { google } = require('googleapis');
 
 // 設定google api 認證
 const auth = new google.auth.GoogleAuth({
