@@ -1,17 +1,17 @@
-const express = require('express');
-const cors = require('cors');
+// const express = require('express');
+// const cors = require('cors');
 const axios = require('axios');
 const moment = require('moment');
 // 拿取env檔資料的套件
-const dotenv = require('dotenv');
-dotenv.config();
+// const dotenv = require('dotenv');
+// dotenv.config();
 
 // 引入google api套件
 const { google } = require('googleapis');
 
 // 設定google api 認證
 const auth = new google.auth.GoogleAuth({
-    keyFile:  JSON.parse(process.env.GOOGLE_KEY_JSON),
+    credentials:  JSON.parse(process.env.GOOGLE_KEY_JSON),
     // keyFile: 'keyFile.json',
     scopes: ['https://www.googleapis.com/auth/calendar']
 });
