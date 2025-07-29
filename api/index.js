@@ -1,91 +1,24 @@
-const express = require('express');
-const cors = require('cors');
-const axios = require('axios');
-const moment = require('moment');
+// const express = require('express');
+// const cors = require('cors');
+// const axios = require('axios');
+// const moment = require('moment');
 // 拿取env檔資料的套件
-const dotenv = require('dotenv');
-dotenv.config();
+// const dotenv = require('dotenv');
+// dotenv.config();
 
 // 引入google api套件
-const { google } = require('googleapis');
+// const { google } = require('googleapis');
 
-const app = express();
-app.use(cors());
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+// const app = express();
+// app.use(cors());
+// app.use(express.json());
+// app.use(express.urlencoded({ extended: true }));
 
-app.listen(3000, () => {
-  console.log('Server is running on http://localhost:3000');
-});
+// app.listen(3000, () => {
+//   console.log('Server is running on http://localhost:3000');
+// });
 
-// 設定google api 認證
-const auth = new google.auth.GoogleAuth({
-  keyFile: 'keyFile.json',
-  scopes: ['https://www.googleapis.com/auth/calendar']
-});
 
-// 取得使用者名稱
-async function GetUserName(userId) {
-  let UserName = ''
-  try {
-    const response = await axios.get(`https://api.line.me/v2/bot/profile/${userId}`, {
-      headers: {
-        Authorization: 'Bearer ' + process.env.access_token
-      }
-    });
-    UserName = response.data.displayName;
-  } catch (error) {
-    console.error('Error fetching user name:', error);
-    throw error;
-  }
-  return UserName;
-}
-
-// line webhook接收訊息
-app.post('/lineWebHook', async (req, res) => {
-  const UserId = req.body.events[0].source.userId;
-  const UserName = await GetUserName(UserId);
-  if (req.body.events[0].message.text.includes('借用會議室')) {
-    const content = req.body.events[0].message.text;
-    let matchDate = content.match(/(\d{1,2}\/\d{1,2})/);
-    let Date = matchDate ? moment(matchDate[0], 'M/D').format('YYYY-MM-DD') : '';
-    // 取得開始時間
-    let matchStartTime = content.match(/(\d{1,2}:\d{2}[\-~～－])/);
-    let StartTime = matchStartTime ? moment(matchStartTime[0], 'HH:mm').format('HH:mm') : '';
-    // 取得結束時間
-    let matchEndTime = content.match(/([\-~～－]\d{1,2}:\d{2})/);
-    let EndTime = matchEndTime ? moment(matchEndTime[0], 'HH:mm').format('HH:mm') : '';
-    // 取得標題
-    let Summary = content.split(' ').slice(1).join(' ');
-    // 組合事件
-    let caseEvent = {
-      'summary': UserName + ' ' + Summary,
-      'start': {
-        'dateTime': `${Date}T${StartTime}:00+08:00`,
-        'timeZone': 'Asia/Taipei',
-      },
-      'end': {
-        'dateTime': `${Date}T${EndTime}:00+08:00`,
-        'timeZone': 'Asia/Taipei',
-      },
-    }
-    // 取得Service Account認證
-    const authClient = await auth.getClient();
-    const calendar = google.calendar({ version: 'v3', auth: authClient });
-    const result = await calendar.events.insert({
-      calendarId: '353ad998c6a7082490658174c42ceeacb50bd3a9d1e17689a9241168657c4848@group.calendar.google.com',
-      resource: caseEvent,
-    });
-
-    res.send({
-      status: 200,
-      message: caseEvent,
-      result: result.data.htmlLink,
-    });
-  } else {
-    return
-  }
-});
 
 // 串接google api的網址，驗證完身分後的首頁
 // app.get('/auth', async (req, res) => {
@@ -135,10 +68,10 @@ app.post('/lineWebHook', async (req, res) => {
 //   auth: auth
 // });
 // 讀取檔案
-const fs = require('fs').promises;
-const path = require('path');
+// const fs = require('fs').promises;
+// const path = require('path');
 
-let AddEventList = []
+// let AddEventList = []
 // async function readFile() {
 //   try {
 //     const data = await fs.readFile('./content.txt', 'utf8');
@@ -218,6 +151,10 @@ let AddEventList = []
 //   }
 // });
 
-app.get('/', (req, res) => {
-  res.send(AddEventList);
-});
+
+export default function handler(req, res) {
+  res.status(200).json({ message: 'API is working' });
+}
+// app.get('/', (req, res) => {
+//   res.send(AddEventList);
+// });
