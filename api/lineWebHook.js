@@ -34,7 +34,7 @@ async function GetUserName(userId) {
 }
 
 // line webhook接收訊息
-export default async function handler(req, res) {
+module.exports = async function handler(req, res) {
     if (req.method !== 'POST') return res.status(405).end();
 
     const UserId = req.body.events[0].source.userId;
