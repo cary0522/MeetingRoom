@@ -11,7 +11,8 @@ const { google } = require('googleapis');
 
 // 設定google api 認證
 const auth = new google.auth.GoogleAuth({
-    keyFile: 'keyFile.json',
+    keyFile:  JSON.parse(process.env.GOOGLE_KEY_JSON),
+    // keyFile: 'keyFile.json',
     scopes: ['https://www.googleapis.com/auth/calendar']
 });
 
