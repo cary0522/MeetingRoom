@@ -1,11 +1,11 @@
-const axios = require('axios');
-const moment = require('moment');
+import axios from 'axios';
+import moment from 'moment';
 // 拿取env檔資料的套件
 // const dotenv = require('dotenv');
 // dotenv.config();
 
 // 引入google api套件
-const { google } = require('googleapis');
+import { google } from 'googleapis';
 
 // 設定google api 認證
 const auth = new google.auth.GoogleAuth({
@@ -32,7 +32,7 @@ async function GetUserName(userId) {
 }
 
 // line webhook接收訊息
-module.exports = async function handler(req, res) {
+export default async function handler(req, res) {
     if (req.method !== 'POST') return res.status(405).end();
     if (req.method === 'POST') {
         console.log('Received webhook:', req.body);
@@ -69,7 +69,7 @@ module.exports = async function handler(req, res) {
                 calendarId: '353ad998c6a7082490658174c42ceeacb50bd3a9d1e17689a9241168657c4848@group.calendar.google.com',
                 resource: caseEvent,
             });
-    
+
             res.status(200).json({ status: 200, url: result.htmlLink });
         } else {
             res.status(200).end();
