@@ -171,8 +171,8 @@ import { google } from 'googleapis';
 
 // 設定google api 認證
 const auth = new google.auth.GoogleAuth({
-  // credentials: JSON.parse(process.env.GOOGLE_KEY_JSON),
-  keyFile: 'keyFile.json',
+  credentials: JSON.parse(process.env.GOOGLE_KEY_JSON),
+  // keyFile: 'keyFile.json',
   scopes: ['https://www.googleapis.com/auth/calendar']
 });
 
