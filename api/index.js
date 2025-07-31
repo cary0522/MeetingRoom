@@ -171,8 +171,8 @@ import { google } from 'googleapis';
 
 // 設定google api 認證
 const auth = new google.auth.GoogleAuth({
-  credentials: JSON.parse(process.env.GOOGLE_KEY_JSON),
-  // keyFile: 'keyFile.json',
+  // credentials: JSON.parse(process.env.GOOGLE_KEY_JSON),
+  keyFile: 'keyFile.json',
   scopes: ['https://www.googleapis.com/auth/calendar']
 });
 
@@ -197,12 +197,18 @@ async function GetUserName(userId) {
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).end();
   if (req.method === 'POST') {
-    console.log('Received webhook:', req.body);
-    const UserId = req.body.events[0].source.userId;
-    const UserName = await GetUserName(UserId);
-    if (req.body.events[0].message.text.includes('借用會議室')) {
+    if (req.body.events[0].source && req.body.events[0].message.text.includes('借用會議室')) {
+      const UserId = req.body.events[0].source.userId;
+      const UserName = await GetUserName(UserId);
       const content = req.body.events[0].message.text;
-      let matchDate = content.match(/(\d{1,2}\/\d{1,2})/);
+      let matchDate = ''
+      if (content.match(/(\d{1,2}\/\d{1,2})/)) {
+        matchDate = content.match(/(\d{1,2}\/\d{1,2})/);
+      } else if (content.match(/(\d{1,2}\.\d{1,2})/)) {
+        matchDate = content.match(/(\d{1,2}\.\d{1,2})/);
+      } else if (content.includes('今天')) {
+        matchDate = [moment().format('M/D')];
+      }
       let Date = matchDate ? moment(matchDate[0], 'M/D').format('YYYY-MM-DD') : '';
       // 取得開始時間
       let matchStartTime = content.match(/(\d{1,2}:\d{2}[\-~～－])/);
