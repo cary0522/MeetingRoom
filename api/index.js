@@ -211,10 +211,10 @@ export default async function handler(req, res) {
       }
       let Date = matchDate ? moment(matchDate[0], 'M/D').format('YYYY-MM-DD') : '';
       // 取得開始時間
-      let matchStartTime = content.match(/(\d{1,2}:\d{2}[\-~～－])/);
+      let matchStartTime = content.match(/(\d{1,2}[:：]\d{2}[\-~～－])/);
       let StartTime = matchStartTime ? moment(matchStartTime[0], 'HH:mm').format('HH:mm') : '';
       // 取得結束時間
-      let matchEndTime = content.match(/([\-~～－]\d{1,2}:\d{2})/);
+      let matchEndTime = content.match(/([\-~～－]\d{1,2}[:：]\d{2})/);
       let EndTime = matchEndTime ? moment(matchEndTime[0], 'HH:mm').format('HH:mm') : '';
       // 取得標題
       let Summary = content.split(' ').slice(1).join(' ');
