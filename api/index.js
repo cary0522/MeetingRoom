@@ -177,10 +177,10 @@ const auth = new google.auth.GoogleAuth({
 });
 
 // 取得使用者名稱
-async function GetUserName(userId) {
+async function GetUserName(UserId, GroupId) {
   let UserName = ''
   try {
-    const response = await axios.get(`https://api.line.me/v2/bot/profile/${userId}`, {
+    const response = await axios.get(`https://api.line.me/v2/bot/group/${GroupId}/member/${UserId}`, {
       headers: {
         Authorization: 'Bearer ' + process.env.access_token
       }
@@ -199,7 +199,8 @@ export default async function handler(req, res) {
   if (req.method === 'POST') {
     if (req.body.events[0].source && req.body.events[0].message.text.includes('借用會議室')) {
       const UserId = req.body.events[0].source.userId;
-      const UserName = await GetUserName(UserId);
+      const GroupId = req.body.events[0].source.groupId;
+      const UserName = await GetUserName(UserId, GroupId);
       const content = req.body.events[0].message.text;
       let matchDate = ''
       if (content.match(/(\d{1,2}\/\d{1,2})/)) {
